@@ -534,7 +534,7 @@ function viewProduct(name){
   document.getElementById("viewPrice").textContent = "KES " + p.price;
   document.getElementById("viewCategory").textContent = p.category + " | " + (p.size || "");
 
-  document.getElementById("viewdescription").textContent = "description: " + (p.abv || "N/A");
+  document.getElementById("viewABV").textContent = "ABV: " + (p.abv || "N/A");
   document.getElementById("viewCountry").textContent = "Country: " + (p.country || "N/A");
   document.getElementById("viewBrand").textContent = "Brand: " + (p.brand || "N/A");
   document.getElementById("viewStock").textContent = "Availability: " + (p.stock || "In Stock");
