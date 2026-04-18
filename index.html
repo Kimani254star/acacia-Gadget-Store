@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Tech Store</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
+  margin:0;
+  background:#f5f5f5;
+}
+
+body.dark{
+  background:#111;
+  color:#fff;
+}
+
+header{
+  background:#111;
+  color:#fff;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+#container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+#filters{
+  width:260px;
+}
+
+#grid{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+body.dark .card{
+  background:#1e1e1e;
+}
+
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+button{
+  padding:8px;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+.add{
+  background:#b30000;
+  color:#fff;
+  border:none;
+  width:100%;
+}
+
+.instock{color:green;}
+.outstock{color:red;}
+
+#viewModal, #cartModal{
+  display:none;
+  position:fixed;
+  top:15%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
+  z-index:999;
+}
+
+body.dark #viewModal,
+body.dark #cartModal{
+  background:#222;
+}
+.top-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.top-icons a {
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.footer{
+  background:#111;
+  color:white;
+  padding:40px 20px;
+  margin-top:40px;
+}
+
+.footer-container{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.footer-section{
+  flex:1;
+  min-width:180px;
+}
+
+.footer-section h3,
+.footer-section h4{
+  margin-bottom:10px;
+}
+
+.footer-section p{
+  font-size:14px;
+  margin:5px 0;
+}
+
+.footer-bottom{
+  text-align:center;
+  margin-top:20px;
+  border-top:1px solid #444;
+  padding-top:10px;
+  font-size:13px;
+}
+.love{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+  border:none;
+  cursor:pointer;
+  background:#eee;
+  border-radius:6px;
+}
+
+.love.active{
+  background:#ff4d6d;
+  color:white;
+}
+.top-icons{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.icon-btn{
+  background:none;
+  border:none;
+  font-size:24px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.heart{
+  color:red;
+}
+
+.whatsapp{
+  color:#25D366;
+}
+
+@media(max-width:800px){
+  #container{flex-direction:column;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🛒 Smart Tech Store</h2>
+  <div>
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="showCart()">🛒 Cart</button>
+  </div>
+</header>
+
+<section id="container">
+
+<div id="filters">
+
+<input type="text" id="search" placeholder="Search..." oninput="applyFilters()" style="width:100%;padding:8px;margin-bottom:15px;">
+
+<h3>Category</h3>
+<label><input type="checkbox" value="Phone" onchange="applyFilters()"> Phones</label><br>
+<label><input type="checkbox" value="Laptop" onchange="applyFilters()"> Laptops</label><br>
+<label><input type="checkbox" value="Printer" onchange="applyFilters()"> Printers</label><br>
+<label><input type="checkbox" value="Accessory" onchange="applyFilters()"> Accessories</label><br>
+<label><input type="checkbox" value="Tablet" onchange="applyFilters()"> Tablets</label><br>
+<label><input type="checkbox" value="Monitor" onchange="applyFilters()"> Monitors</label><br>
+
+<h3>RAM</h3>
+<label><input type="checkbox" value="2GB" data-type="ram" onchange="applyFilters()"> 2GB</label><br>
+<label><input type="checkbox" value="4GB" data-type="ram" onchange="applyFilters()"> 4GB</label><br>
+<label><input type="checkbox" value="6GB" data-type="ram" onchange="applyFilters()"> 6GB</label><br>
+<label><input type="checkbox" value="8GB" data-type="ram" onchange="applyFilters()"> 8GB</label><br>
+<label><input type="checkbox" value="12GB" data-type="ram" onchange="applyFilters()"> 12GB</label><br>
+<label><input type="checkbox" value="16GB" data-type="ram" onchange="applyFilters()"> 16GB</label><br>
+<label><input type="checkbox" value="32GB" data-type="ram" onchange="applyFilters()"> 32GB</label><br>
+
+<h3>Storage</h3>
+<label><input type="checkbox" value="32GB" data-type="storage" onchange="applyFilters()"> 32GB</label><br>
+<label><input type="checkbox" value="64GB" data-type="storage" onchange="applyFilters()"> 64GB</label><br>
+<label><input type="checkbox" value="128GB" data-type="storage" onchange="applyFilters()"> 128GB</label><br>
+<label><input type="checkbox" value="256GB" data-type="storage" onchange="applyFilters()"> 256GB</label><br>
+<label><input type="checkbox" value="512GB" data-type="storage" onchange="applyFilters()"> 512GB</label><br>
+<label><input type="checkbox" value="1TB" data-type="storage" onchange="applyFilters()"> 1TB</label><br>
+
+<h3>Price</h3>
+<label><input type="checkbox" value="under10000" data-type="price" onchange="applyFilters()"> Under 10,000</label><br>
+<label><input type="checkbox" value="10000-20000" data-type="price" onchange="applyFilters()"> 10k – 20k</label><br>
+<label><input type="checkbox" value="20000-50000" data-type="price" onchange="applyFilters()"> 20k – 50k</label><br>
+<label><input type="checkbox" value="50000-80000" data-type="price" onchange="applyFilters()"> 50k – 80k</label><br>
+<label><input type="checkbox" value="80000-150000" data-type="price" onchange="applyFilters()"> 80k – 150k</label><br>
+<label><input type="checkbox" value="150000plus" data-type="price" onchange="applyFilters()"> Above 150k</label><br>
+
+<h3>Brand</h3>
+<label><input type="checkbox" value="Apple" data-type="brand" onchange="applyFilters()"> Apple</label><br>
+<label><input type="checkbox" value="Samsung" data-type="brand" onchange="applyFilters()"> Samsung</label><br>
+<label><input type="checkbox" value="HP" data-type="brand" onchange="applyFilters()"> HP</label><br>
+<label><input type="checkbox" value="Dell" data-type="brand" onchange="applyFilters()"> Dell</label><br>
+<label><input type="checkbox" value="Lenovo" data-type="brand" onchange="applyFilters()"> Lenovo</label><br>
+<label><input type="checkbox" value="Infinix" data-type="brand" onchange="applyFilters()"> Infinix</label><br>
+
+<h3>Condition</h3>
+<label><input type="checkbox" value="New" data-type="condition" onchange="applyFilters()"> New</label><br>
+<label><input type="checkbox" value="Used" data-type="condition" onchange="applyFilters()"> Used</label><br>
+<label><input type="checkbox" value="Refurbished" data-type="condition" onchange="applyFilters()"> Refurbished</label><br>
+<button onclick="clearFilters()">Clear Filters</button>
+</div>
+
+<div id="grid"></div>
+
+</section>
+<div id="viewModal" style="display:none; position:fixed; top:10; left:10; width:100%; height:100%;
+background:rgba(0,0,0,0.6);">
+
+  <div style="background:#fff; width:320px; margin:80px auto; padding:15px; border-radius:10px; text-align:center;">
+
+    <img id="viewImg" style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
+
+    <h3 id="viewName"></h3>
+    <p id="viewPrice"></p>
+    <p id="viewCategory"></p>
+    <p id="viewABV"></p>
+    <p id="viewCountry"></p>
+    <p id="viewBrand"></p>
+    <p id="viewStock"></p>
+    <p id="viewDesc" style="font-size:13px; text-align:left;"></p>
+
+    <button onclick="closeView()">Close</button>
+
+  </div>
+</div>
+
+<div id="cartModal">
+<h3>Your Order</h3>
+<ul id="cartList"></ul>
+<p><b>Total: KES <span id="total">0</span></b></p>
+<button onclick="checkout()">WhatsApp Order</button>
+<button onclick="closeCart()">Close</button>
+</div>
+
+<footer class="footer">
+
+<div class="footer-container">
+
+  <div class="footer-section">
+    <h3>🛒 Smart Tech Store</h3>
+    <p>Your trusted shop for phones, laptops, and accessories.</p>
+  </div>
+
+ <div class="footer-section">
+  <h4>📞 Contact Us</h4>
+  <p>📱 Phone: +254 731 858 997</p>
+
+  <p>
+    💬 <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">WhatsApp</a>
+  </p>
+
+  <p>📧 Email: support@smarttech.com</p>
+  <p>📍 Nairobi, Kenya</p>
+
+  <div style="margin-top:10px; font-size:22px; display:flex; gap:12px;">
+    
+    <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="https://facebook.com" target="_blank" style="color:#1877F2;">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+
+  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+
+</div>
+
+</div>
+
+  <div class="footer-section">
+    <h4>💳 Payment</h4>
+    <p>M-PESA Till: 123456</p>
+    <p>Visa / MasterCard</p>
+    <p>Cash on Delivery</p>
+  </div>
+
+  <div class="footer-section">
+    <h4>📜 Terms</h4>
+    <p>No refunds after 7 days</p>
+    <p>Warranty where stated</p>
+    <p>Prices may change</p>
+  </div>
+
+</div>
+
+<div class="footer-bottom">
+  <p>© 2026Acacia Liquor Store</p>
+</div>
+
+</footer>
+
+<script>
+const products = [
+
+  { name: "Samsung Galaxy A15", price: 18000, category: "Phone", ram: "4GB", storage: "64GB", brand: "Samsung", condition: "New", image: "images/galaxy-a15.jpg", stock: 10 },
+  { name: "iPhone 11", price: 45000, category: "Phone", ram: "4GB", storage: "128GB", brand: "Apple", condition: "Used", image: "images/iphone-11.jpg", stock: 10 },
+  { name: "Infinix Hot 40", price: 22000, category: "Phone", ram: "8GB", storage: "128GB", brand: "Infinix", condition: "New", image: "images/hot40.jpg", stock: 10 },
+  { name: "Samsung A24", price: 24000, category: "Phone", ram: "6GB", storage: "128GB", brand: "Samsung", condition: "New", image: "images/a24.jpg", stock: 10 },
+  { name: "Tecno Camon 20", price: 23000, category: "Phone", ram: "8GB", storage: "256GB", brand: "Tecno", condition: "New", image: "images/camon20.jpg", stock: 10 },
+  { name: "Redmi Note 13", price: 26000, category: "Phone", ram: "6GB", storage: "128GB", brand: "Xiaomi", condition: "New", image: "images/note13.jpg", stock: 10 },
+  { name: "iPhone 13", price: 75000, category: "Phone", ram: "6GB", storage: "128GB", brand: "Apple", condition: "New", image: "images/iphone13.jpg", stock: 10 },
+  { name: "Oppo A78", price: 21000, category: "Phone", ram: "8GB", storage: "128GB", brand: "Oppo", condition: "New", image: "images/a78.jpg", stock: 10 },
+  { name: "Vivo Y36", price: 20000, category: "Phone", ram: "8GB", storage: "128GB", brand: "Vivo", condition: "New", image: "images/y36.jpg", stock: 10 },
+  { name: "Samsung S21", price: 60000, category: "Phone", ram: "8GB", storage: "256GB", brand: "Samsung", condition: "Used", image: "images/s21.jpg", stock: 10 },
+  { name: "iPhone XR", price: 35000, category: "Phone", ram: "3GB", storage: "64GB", brand: "Apple", condition: "Used", image: "images/xr.jpg", stock: 10 },
+  { name: "Infinix Zero 30", price: 28000, category: "Phone", ram: "8GB", storage: "256GB", brand: "Infinix", condition: "New", image: "images/zero30.jpg", stock: 10 },
+  { name: "Tecno Spark 10", price: 17000, category: "Phone", ram: "4GB", storage: "128GB", brand: "Tecno", condition: "New", image: "images/spark10.jpg", stock: 10 },
+  { name: "Redmi 12", price: 19000, category: "Phone", ram: "4GB", storage: "128GB", brand: "Xiaomi", condition: "New", image: "images/redmi12.jpg", stock: 10 },
+  { name: "Oppo Reno 8", price: 42000, category: "Phone", ram: "8GB", storage: "256GB", brand: "Oppo", condition: "New", image: "images/reno8.jpg", stock: 10 },
+
+  { name: "HP Pavilion 15", price: 65000, category: "Laptop", ram: "8GB", storage: "512GB", brand: "HP", condition: "New", image: "images/hp-pavilion.jpg", stock: 10 },
+  { name: "Lenovo IdeaPad 3", price: 48000, category: "Laptop", ram: "8GB", storage: "256GB", brand: "Lenovo", condition: "New", image: "images/lenovo.jpg", stock: 10 },
+  { name: "Dell Inspiron 14", price: 75000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "Dell", condition: "New", image: "images/dell.jpg", stock: 10 },
+  { name: "HP EliteBook 840", price: 85000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "HP", condition: "Used", image: "images/elitebook.jpg", stock: 10 },
+  { name: "MacBook Air M1", price: 120000, category: "Laptop", ram: "8GB", storage: "256GB", brand: "Apple", condition: "New", image: "images/macbook.jpg", stock: 10 },
+  { name: "Acer Aspire 5", price: 52000, category: "Laptop", ram: "8GB", storage: "512GB", brand: "Acer", condition: "New", image: "images/aspire5.jpg", stock: 10 },
+  { name: "Asus VivoBook", price: 50000, category: "Laptop", ram: "8GB", storage: "256GB", brand: "Asus", condition: "New", image: "images/vivobook.jpg", stock: 10 },
+  { name: "Lenovo ThinkPad", price: 90000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "Lenovo", condition: "Used", image: "images/thinkpad.jpg", stock: 10 },
+  { name: "Dell Latitude 7420", price: 95000, category: "Laptop", ram: "16GB", storage: "1TB", brand: "Dell", condition: "New", image: "images/latitude.jpg", stock: 10 },
+  { name: "HP ProBook 450", price: 70000, category: "Laptop", ram: "8GB", storage: "512GB", brand: "HP", condition: "New", image: "images/probook.jpg", stock: 10 },
+  { name: "Samsung Galaxy Book", price: 80000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "Samsung", condition: "New", image: "images/galaxybook.jpg", stock: 10 },
+  { name: "Razer Blade 15", price: 200000, category: "Laptop", ram: "32GB", storage: "1TB", brand: "Razer", condition: "New", image: "images/razer.jpg", stock: 10 },
+  { name: "MSI GF63", price: 85000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "MSI", condition: "New", image: "images/msi.jpg", stock: 10 },
+  { name: "Asus TUF Gaming", price: 110000, category: "Laptop", ram: "16GB", storage: "1TB", brand: "Asus", condition: "New", image: "images/tuf.jpg", stock: 10 },
+  { name: "Acer Nitro 5", price: 100000, category: "Laptop", ram: "16GB", storage: "512GB", brand: "Acer", condition: "New", image: "images/nitro.jpg", stock: 10 },
+
+  { name: "HP LaserJet Pro", price: 25000, category: "Printer", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/hp-laser.jpg", stock: 10 },
+  { name: "Epson EcoTank L3250", price: 32000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Epson", condition: "New", image: "images/epson.jpg", stock: 10 },
+  { name: "Canon PIXMA G2410", price: 28000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Canon", condition: "New", image: "images/canon.jpg", stock: 10 },
+  { name: "HP DeskJet 2710", price: 15000, category: "Printer", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/deskjet.jpg", stock: 10 },
+  { name: "Brother HL-L2350DW", price: 30000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Brother", condition: "New", image: "images/brother.jpg", stock: 10 },
+  { name: "Epson L3110", price: 27000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Epson", condition: "Used", image: "images/l3110.jpg", stock: 10 },
+  { name: "Canon LBP6030", price: 22000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Canon", condition: "New", image: "images/lbp6030.jpg", stock: 10 },
+  { name: "HP Smart Tank 515", price: 35000, category: "Printer", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/smarttank.jpg", stock: 10 },
+  { name: "Epson XP-2100", price: 24000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Epson", condition: "New", image: "images/xp2100.jpg", stock: 10 },
+  { name: "Brother DCP-T420W", price: 33000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Brother", condition: "New", image: "images/dcp.jpg", stock: 10 },
+  { name: "Canon G3411", price: 34000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Canon", condition: "New", image: "images/g3411.jpg", stock: 10 },
+  { name: "HP OfficeJet Pro", price: 40000, category: "Printer", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/officejet.jpg", stock: 10 },
+  { name: "Epson L805", price: 38000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Epson", condition: "New", image: "images/l805.jpg", stock: 10 },
+  { name: "Brother MFC-J1010DW", price: 36000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Brother", condition: "New", image: "images/mfc.jpg", stock: 10 },
+  { name: "Canon TS3440", price: 20000, category: "Printer", ram: "N/A", storage: "N/A", brand: "Canon", condition: "New", image: "images/ts3440.jpg", stock: 10 },
+
+
+  { name: "Wireless Earbuds", price: 2500, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/earbuds.jpg", stock: 10 },
+  { name: "Phone Charger Fast", price: 1200, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/charger.jpg", stock: 10 },
+  { name: "Laptop Bag", price: 1800, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/bag.jpg", stock: 10 },
+  { name: "Bluetooth Speaker", price: 3500, category: "Accessory", ram: "N/A", storage: "N/A", brand: "JBL", condition: "New", image: "images/speaker.jpg", stock: 10 },
+  { name: "USB Flash Drive 64GB", price: 1500, category: "Accessory", ram: "N/A", storage: "64GB", brand: "SanDisk", condition: "New", image: "images/usb.jpg", stock: 10 },
+  { name: "HDMI Cable", price: 800, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/hdmi.jpg", stock: 10 },
+  { name: "Wireless Mouse", price: 1200, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Logitech", condition: "New", image: "images/mouse.jpg", stock: 10 },
+  { name: "Keyboard RGB", price: 2500, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Redragon", condition: "New", image: "images/keyboard.jpg", stock: 10 },
+  { name: "Power Bank 20000mAh", price: 4000, category: "Accessory", ram: "N/A", storage: "20000mAh", brand: "Anker", condition: "New", image: "images/powerbank.jpg", stock: 10 },
+  { name: "Phone Case", price: 600, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/case.jpg", stock: 10 },
+  { name: "Screen Protector", price: 500, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/screen.jpg", stock: 10 },
+  { name: "USB-C Cable", price: 700, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/typec.jpg", stock: 10 },
+  { name: "Laptop Cooling Pad", price: 2200, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Havit", condition: "New", image: "images/cooling.jpg", stock: 10 },
+  { name: "Memory Card 128GB", price: 1800, category: "Accessory", ram: "N/A", storage: "128GB", brand: "SanDisk", condition: "New", image: "images/sdcard.jpg", stock: 10 },
+  { name: "Car Charger", price: 900, category: "Accessory", ram: "N/A", storage: "N/A", brand: "Generic", condition: "New", image: "images/carcharger.jpg", stock: 10 },
+
+  { name: "Samsung Galaxy Tab A9", price: 22000, category: "Tablet", ram: "4GB", storage: "64GB", brand: "Samsung", condition: "New", image: "images/tab-a9.jpg", stock: 10 },
+  { name: "iPad 9th Gen", price: 55000, category: "Tablet", ram: "3GB", storage: "64GB", brand: "Apple", condition: "Used", image: "images/ipad9.jpg", stock: 10 },
+  { name: "Lenovo Tab M10", price: 18000, category: "Tablet", ram: "4GB", storage: "128GB", brand: "Lenovo", condition: "New", image: "images/tab-m10.jpg", stock: 10 },
+  { name: "Huawei MatePad 11", price: 65000, category: "Tablet", ram: "6GB", storage: "128GB", brand: "Huawei", condition: "New", image: "images/matepad.jpg", stock: 10 },
+  { name: "Samsung Galaxy Tab S6 Lite", price: 48000, category: "Tablet", ram: "4GB", storage: "64GB", brand: "Samsung", condition: "New", image: "images/tab-s6.jpg", stock: 10 },
+  { name: "Amazon Fire HD 10", price: 15000, category: "Tablet", ram: "3GB", storage: "32GB", brand: "Amazon", condition: "New", image: "images/firehd.jpg", stock: 10 },
+  { name: "iPad Air M1", price: 120000, category: "Tablet", ram: "8GB", storage: "256GB", brand: "Apple", condition: "New", image: "images/ipadair.jpg", stock: 10 },
+  { name: "Xiaomi Pad 6", price: 45000, category: "Tablet", ram: "8GB", storage: "128GB", brand: "Xiaomi", condition: "New", image: "images/pad6.jpg", stock: 10 },
+  { name: "Realme Pad Mini", price: 20000, category: "Tablet", ram: "3GB", storage: "64GB", brand: "Realme", condition: "New", image: "images/padmini.jpg", stock: 10 },
+  { name: "Samsung Tab S9 Ultra", price: 180000, category: "Tablet", ram: "12GB", storage: "512GB", brand: "Samsung", condition: "New", image: "images/tabs9.jpg", stock: 10 },
+  { name: "HP 24 Inch Monitor", price: 18000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/hp24.jpg", stock: 10 },
+  { name: "Dell 27 Inch IPS", price: 32000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "Dell", condition: "New", image: "images/dell27.jpg", stock: 10 },
+  { name: "Samsung Curved 27\"", price: 40000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "Samsung", condition: "New", image: "images/samsungcurved.jpg", stock: 10 },
+  { name: "LG 24 Inch Full HD", price: 22000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "LG", condition: "New", image: "images/lg24.jpg", stock: 10 },
+  { name: "AOC Gaming Monitor 144Hz", price: 35000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "AOC", condition: "New", image: "images/aoc.jpg", stock: 10 },
+  { name: "HP 22 Inch LED", price: 15000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "HP", condition: "New", image: "images/hp22.jpg", stock: 10 },
+  { name: "Asus Gaming 165Hz", price: 45000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "Asus", condition: "New", image: "images/asus165.jpg", stock: 10 },
+  { name: "Lenovo ThinkVision 24", price: 20000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "Lenovo", condition: "New", image: "images/thinkvision.jpg", stock: 10 },
+  { name: "MSI 27 Inch Gaming", price: 50000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "MSI", condition: "New", image: "images/msi27.jpg", stock: 10 },
+  { name: "BenQ Designer Monitor", price: 38000, category: "Monitor", ram: "N/A", storage: "N/A", brand: "BenQ", condition: "New", image: "images/benq.jpg", stock: 10 },
+];
+
+
+let cart = {};
+
+function display(list = products){
+const grid = document.getElementById("grid");
+grid.innerHTML = "";
+
+list.forEach(p=>{
+grid.innerHTML += `
+<div class="card">
+
+<img src="${p.image}" alt="${p.name}"
+onclick="viewProduct('${p.name}')"
+style="width:100%; height:180px; object-fit:cover; border-radius:10px; cursor:pointer;">
+
+<h3>${p.name}</h3>
+<p>KES ${p.price}</p>
+<p>${p.category} | ${p.size}</p>
+
+<p class="${p.stock > 0 ? 'instock' : 'outstock'}">
+${p.stock > 0 ? 'Available' : 'Out of stock'}
+</p>
+
+<div class="top-icons">
+
+  <button onclick="add('${p.name}')" class="icon-btn">🛒</button>
+
+  <button onclick="toggleLove('${p.name}')" class="icon-btn heart">
+    ${likes[p.name] ? "❤️" : "🤍"}
+  </button>
+
+ <a href="https://wa.me/254731858997" target="_blank" style="color:#25D366;">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <a href="https://instagram.com" target="_blank" style="color:#E4405F;">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+</div>
+
+</div>
+`;
+});
+}
+let likes = {};
+
+function toggleLove(name){
+  if(likes[name]){
+    delete likes[name];
+  } else {
+    likes[name] = true;
+  }
+  display(products);
+}
+
+function viewProduct(name){
+  const p = products.find(x => x.name === name);
+  if(!p) return;
+
+  document.getElementById("viewImg").src = p.image;
+  document.getElementById("viewName").textContent = p.name;
+  document.getElementById("viewPrice").textContent = "KES " + p.price;
+  document.getElementById("viewCategory").textContent = p.category + " | " + (p.size || "");
+
+  document.getElementById("viewABV").textContent = "ABV: " + (p.abv || "N/A");
+  document.getElementById("viewCountry").textContent = "Country: " + (p.country || "N/A");
+  document.getElementById("viewBrand").textContent = "Brand: " + (p.brand || "N/A");
+  document.getElementById("viewStock").textContent = "Availability: " + (p.stock || "In Stock");
+  document.getElementById("viewDesc").textContent = p.description || "";
+
+  document.getElementById("viewModal").style.display = "block";
+}
+
+function closeView(){
+document.getElementById("viewModal").style.display = "none";
+}
+
+function applyFilters(){
+  const search = document.getElementById("search").value.toLowerCase();
+
+  const checked = [...document.querySelectorAll("input[type=checkbox]:checked")];
+
+  const category = checked
+    .filter(c => !c.dataset.type)
+    .map(c => c.value);
+
+  const ram = checked
+    .filter(c => c.dataset.type === "ram")
+    .map(c => c.value);
+
+  const storage = checked
+    .filter(c => c.dataset.type === "storage")
+    .map(c => c.value);
+
+  const price = checked
+    .filter(c => c.dataset.type === "price")
+    .map(c => c.value);
+
+  const brand = checked
+    .filter(c => c.dataset.type === "brand")
+    .map(c => c.value);
+
+  const condition = checked
+    .filter(c => c.dataset.type === "condition")
+    .map(c => c.value);
+
+  const filtered = products.filter(p => {
+
+    const matchSearch = p.name.toLowerCase().includes(search);
+
+    const matchCategory = !category.length || category.includes(p.category);
+
+    const matchRam = !ram.length || ram.includes(p.ram);
+
+    const matchStorage = !storage.length || storage.includes(p.storage);
+
+    const matchBrand = !brand.length || brand.includes(p.brand);
+
+    const matchCondition = !condition.length || condition.includes(p.condition);
+
+    const matchPrice = !price.length || price.some(r => {
+      if(r === "under10000") return p.price < 10000;
+      if(r === "10000-20000") return p.price >= 10000 && p.price <= 20000;
+      if(r === "20000-50000") return p.price >= 20000 && p.price <= 50000;
+      if(r === "50000-80000") return p.price >= 50000 && p.price <= 80000;
+      if(r === "80000-150000") return p.price >= 80000 && p.price <= 150000;
+      if(r === "150000plus") return p.price > 150000;
+    });
+
+    return (
+      matchSearch &&
+      matchCategory &&
+      matchRam &&
+      matchStorage &&
+      matchPrice &&
+      matchBrand &&
+      matchCondition
+    );
+  });
+
+  display(filtered);
+}
+
+function clearFilters(){
+document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+document.getElementById("search").value = "";
+display(products);
+}
+
+function add(name){
+const p = products.find(x => x.name === name);
+if(!p) return;
+
+if(p.stock <= 0){
+alert("Out of stock");
+return;
+}
+
+if(!cart[name]){
+cart[name] = {qty:1, price:p.price};
+}else{
+cart[name].qty++;
+}
+
+p.stock--;
+display(products);
+}
+
+function showCart(){
+const list = document.getElementById("cartList");
+list.innerHTML = "";
+let total = 0;
+
+for(const [name,item] of Object.entries(cart)){
+const sub = item.qty * item.price;
+total += sub;
+list.innerHTML += `<li>${name} x${item.qty} = KES ${sub}</li>`;
+}
+
+document.getElementById("total").textContent = total;
+document.getElementById("cartModal").style.display = "block";
+}
+
+function closeCart(){
+document.getElementById("cartModal").style.display = "none";
+}
+
+function checkout(){
+let msg = "🛒 Liquor Order:%0A%0A";
+let total = 0;
+
+for(const [name,item] of Object.entries(cart)){
+const sub = item.qty * item.price;
+msg += `${name} x${item.qty} = KES ${sub}%0A`;
+total += sub;
+}
+
+msg += `%0A💰 Total: KES ${total}`;
+
+window.open(`https://wa.me/254731858997?text=${msg}`, "_blank");
+}
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+}
+
+display(products);
+</script>
+
+</body>
+</html>
